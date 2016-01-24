@@ -1,10 +1,7 @@
 ﻿
 namespace Network
 {
-    // internal log module 
-    // log handlers can be injected externally
-    // todo not ensure thread-safe yet
-    public static class Log
+    public static class LogHandlerRegister
     {
         public delegate void LogHandler(string msg);
 
@@ -12,7 +9,13 @@ namespace Network
         public static LogHandler DebugHandler;
         public static LogHandler WarnHandler;
         public static LogHandler ErrorHandler;
+    }
 
+    // internal log module 
+    // log handlers can be injected externally
+    // todo not ensure thread-safe yet
+    internal static class Log
+    {
         enum LogLevel
         {
             Info,
@@ -56,21 +59,21 @@ namespace Network
 
         static void LogInternal(LogLevel level, string msg)
         {
-            LogHandler handler = null;
+            LogHandlerRegister.LogHandler handler = null;
 
             switch (level)
             {
                 case LogLevel.Info:
-                    handler = InfoHandler;
+                    handler = LogHandlerRegister.InfoHandler;
                     break;
                 case LogLevel.Debug:
-                    handler = DebugHandler;
+                    handler = LogHandlerRegister.DebugHandler;
                     break;
                 case LogLevel.Warn:
-                    handler = WarnHandler;
+                    handler = LogHandlerRegister.WarnHandler;
                     break;
                 case LogLevel.Error:
-                    handler = ErrorHandler;
+                    handler = LogHandlerRegister.ErrorHandler;
                     break;
             }
 
